@@ -27,15 +27,14 @@ async def on_message(message):
     if (message.author.voice) and message.content.startswith('-join'):
         channel = message.author.voice.channel
         voice = await channel.connect()
-        voice.play(discord.FFmpegPCMAudio(executable=r"C:\Users\nigga\Documents\GitJeison\jeison\ffmpeg\bau\ffmpeg.exe", source="teste.wav"))
-#       source = FFmpegPCMAudio("teste.wav")
-#       player = voice.play(source)
+        voice.play(discord.FFmpegPCMAudio(executable="C:\\Users\\nigga\\Documents\\GitJeison\\jeison\\ffmpeg\\ffmpeg.exe", source="teste.wav"))
+
 #Leave
     elif (message.author.voice) and message.content.startswith('-leave'):
         await channel.send("Forte Abraço!!")
         await channel.guild.voice_client.disconnect()
     elif message.author.voice == None:
-        await channel.send("Tu não ta on no voice macaco")
+        await channel.send("Tu não ta on no voice, macaco")
 
 
 client.run(TOKEN)
