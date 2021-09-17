@@ -1,0 +1,22 @@
+{
+  "name": "jeison",
+  "version": "1.0.0",
+  "description": "bau bau",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guala1/jeison.git"
+  },
+  "author": "Guala e Ualiton",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/guala1/jeison/issues"
+  },
+  "homepage": "https://github.com/guala1/jeison#readme",
+  "dependencies": {
+    "discord.js": "^13.1.0"
+  }
+}
