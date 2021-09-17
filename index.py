@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from discord import FFmpegPCMAudio
 import json
 import requests
 from decouple import config
@@ -17,13 +18,19 @@ async def on_message(message):
         return
 
     channel = message.channel
-    print(help(message.channel))
     if ('sena') in message.content:
         await channel.send('fat and gay')
 
+
+
+#Play
     if (message.author.voice) and message.content.startswith('-join'):
         channel = message.author.voice.channel
-        await channel.connect()
+        voice = await channel.connect()
+        voice.play(discord.FFmpegPCMAudio(executable=r"C:\Users\nigga\Documents\GitJeison\jeison\ffmpeg\bau\ffmpeg.exe", source="teste.wav"))
+#       source = FFmpegPCMAudio("teste.wav")
+#       player = voice.play(source)
+#Leave
     elif (message.author.voice) and message.content.startswith('-leave'):
         await channel.send("Forte Abraço!!")
         await channel.guild.voice_client.disconnect()
