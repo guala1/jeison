@@ -1,5 +1,6 @@
 import discord
 import os
+import requests
 from decouple import config
 
 client = discord.Client()
@@ -11,13 +12,25 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
+    
     if message.author == client.user:
         return
 
     if ('sena') in message.content:
-        await message.channel.send('.play https://soundcloud.com/user-363769748/friendzone')
+        channel = message.channel
+        await channel.send('Say hello!')
+           
+    if (message.author.voice) and message.content.startswith('sena'):
+        channel = message.author.voice.channel
+        await channel.connect()
+    else:
+        await message.send("Tu não ta on no voice macaco")
         
-    if ('Sena') in message.content:
-        await message.channel.send('.play https://soundcloud.com/user-363769748/friendzone')
+    if (message.author.voice) and message.content.startswith('-leave'):
+        await message.voice_client.disconnect()
+    else:
+        await message.send("Tu não ta on no voice macaco")
+        
+
 
 client.run(TOKEN)
