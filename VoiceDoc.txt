@@ -1,0 +1,256 @@
+class VoiceClient(VoiceProtocol)
+ |  VoiceClient(client, channel)
+ |  
+ |  Represents a Discord voice connection.
+ |  
+ |  You do not create these, you typically get them from
+ |  e.g. :meth:`VoiceChannel.connect`.
+ |  
+ |  Warning
+ |  --------
+ |  In order to use PCM based AudioSources, you must have the opus library
+ |  installed on your system and loaded through :func:`opus.load_opus`.
+ |  Otherwise, your AudioSources must be opus encoded (e.g. using :class:`FFmpeg
+OpusAudio`)
+ |  or the library will not be able to transmit audio.
+ |  
+ |  Attributes
+ |  -----------
+ |  session_id: :class:`str`
+ |      The voice connection session ID.
+ |  token: :class:`str`
+ |      The voice connection token.
+ |  endpoint: :class:`str`
+ |      The endpoint we are connecting to.
+ |  channel: :class:`abc.Connectable`
+ |      The voice channel connected to.
+ |  loop: :class:`asyncio.AbstractEventLoop`
+ |      The event loop that the voice client is running on.
+ |  
+ |  Method resolution order:
+ |      VoiceClient
+ |      VoiceProtocol
+ |      builtins.object
+ |  
+ |  Methods defined here:
+ |  
+ |  __init__(self, client, channel)
+ |      Initialize self.  See help(type(self)) for accurate signature.
+ |  
+ |  checked_add(self, attr, value, limit)
+ |  
+ |  async connect(self, *, reconnect, timeout)
+ |      |coro|
+ |      
+ |      An abstract method called when the client initiates the connection reque
+st.
+ |      
+ |      When a connection is requested initially, the library calls the construc
+tor
+ |      under ``__init__`` and then calls :meth:`connect`. If :meth:`connect` fa
+ils at
+ |      some point then :meth:`disconnect` is called.
+ |      
+ |      Within this method, to start the voice connection flow it is recommended
+ to
+ |      use :meth:`Guild.change_voice_state` to start the flow. After which,
+ |      :meth:`on_voice_server_update` and :meth:`on_voice_state_update` will be
+ called.
+ |      The order that these two are called is unspecified.
+ |      
+ |      Parameters
+ |      ------------
+ |      timeout: :class:`float`
+ |          The timeout for the connection.
+ |      reconnect: :class:`bool`
+ |          Whether reconnection is expected.
+ |  
+ |  async connect_websocket(self)
+ |  
+ |  async disconnect(self, *, force=False)
+ |      |coro|
+ |      
+ |      Disconnects this voice client from voice.
+ |  
+ |  finish_handshake(self)
+ |  
+ |  is_connected(self)
+ |      Indicates if the voice client is connected to voice.
+ |  
+ |  is_paused(self)
+ |      Indicates if we're playing audio, but if we're paused.
+ |  
+ |  is_playing(self)
+ |      Indicates if we're currently playing audio.
+ |  
+ |  async move_to(self, channel)
+ |      |coro|
+ |      
+ |      Moves you to a different voice channel.
+ |      
+ |      Parameters
+ |      -----------
+ |      channel: :class:`abc.Snowflake`
+ |          The channel to move to. Must be a voice channel.
+ |  
+ |  async on_voice_server_update(self, data)
+ |      |coro|
+ |      
+ |      An abstract method that is called when initially connecting to voice.
+ |      This corresponds to ``VOICE_SERVER_UPDATE``.
+ |      
+ |      Parameters
+ |      ------------
+ |      data: :class:`dict`
+ |          The raw `voice server update payload`__.
+ |      
+ |          .. _voice_server_update_payload: https://discord.com/developers/docs
+/topics/gateway#voice-server-update-voice-server-update-event-fields
+ |      
+ |          __ voice_server_update_payload_
+ |  
+ |  async on_voice_state_update(self, data)
+ |      |coro|
+ |      
+ |      An abstract method that is called when the client's voice state
+ |      has changed. This corresponds to ``VOICE_STATE_UPDATE``.
+ |      
+ |      Parameters
+ |      ------------
+ |      data: :class:`dict`
+ |          The raw `voice state payload`__.
+ |      
+ |          .. _voice_state_update_payload: https://discord.com/developers/docs/
+resources/voice#voice-state-object
+ |      
+ |          __ voice_state_update_payload_
+ |  
+ |  pause(self)
+ |      Pauses the audio playing.
+ |  
+ |  play(self, source, *, after=None)
+ |      Plays an :class:`AudioSource`.
+ |      
+ |      The finalizer, ``after`` is called after the source has been exhausted
+ |      or an error occurred.
+ |      
+ |      If an error happens while the audio player is running, the exception is
+ |      caught and the audio player is then stopped.  If no after callback is
+ |      passed, any caught exception will be displayed as if it were raised.
+ |      
+ |      Parameters
+ |      -----------
+ |      source: :class:`AudioSource`
+ |          The audio source we're reading from.
+ |      after: Callable[[:class:`Exception`], Any]
+ |          The finalizer that is called after the stream is exhausted.
+ |          This function must have a single parameter, ``error``, that
+ |          denotes an optional exception that was raised during playing.
+ |      
+ |      Raises
+ |      -------
+ |      ClientException
+ |          Already playing audio or not connected.
+ |      TypeError
+ |          Source is not a :class:`AudioSource` or after is not a callable.
+ |      OpusNotLoaded
+ |          Source is not opus encoded and opus is not loaded.
+ |  
+ |  async poll_voice_ws(self, reconnect)
+ |  
+ |  async potential_reconnect(self)
+ |  
+ |  prepare_handshake(self)
+ |  
+ |  resume(self)
+ |      Resumes the audio playing.
+ |  
+ |  send_audio_packet(self, data, *, encode=True)
+ |      Sends an audio packet composed of the data.
+ |      
+ |      You must be connected to play audio.
+ |      
+ |      Parameters
+ |      ----------
+ |      data: :class:`bytes`
+ |          The :term:`py:bytes-like object` denoting PCM or Opus voice data.
+ |      encode: :class:`bool`
+ |          Indicates if ``data`` should be encoded into Opus.
+ |      
+ |      Raises
+ |      -------
+ |      ClientException
+ |          You are not connected.
+ |      opus.OpusError
+ |          Encoding the data failed.
+ |  
+ |  stop(self)
+ |      Stops playing audio.
+ |  
+ |  async voice_connect(self)
+ |  
+ |  async voice_disconnect(self)
+ |  
+ |  ----------------------------------------------------------------------
+ |  Readonly properties defined here:
+ |  
+ |  average_latency
+ |      :class:`float`: Average of most recent 20 HEARTBEAT latencies in seconds
+.
+ |      
+ |      .. versionadded:: 1.4
+ |  
+ |  guild
+ |      Optional[:class:`Guild`]: The guild we're connected to, if applicable.
+ |  
+ |  latency
+ |      :class:`float`: Latency between a HEARTBEAT and a HEARTBEAT_ACK in secon
+ds.
+ |      
+ |      This could be referred to as the Discord Voice WebSocket latency and is
+ |      an analogue of user's voice latencies as seen in the Discord client.
+ |      
+ |      .. versionadded:: 1.4
+ |  
+ |  user
+ |      :class:`ClientUser`: The user connected to voice (i.e. ourselves).
+ |  
+ |  ----------------------------------------------------------------------
+ |  Data descriptors defined here:
+ |  
+ |  source
+ |      Optional[:class:`AudioSource`]: The audio source being played, if playin
+g.
+ |      
+ |      This property can also be used to change the audio source currently bein
+g played.
+ |  
+ |  ----------------------------------------------------------------------
+ |  Data and other attributes defined here:
+ |  
+ |  supported_modes = ('xsalsa20_poly1305_lite', 'xsalsa20_poly1305_suffix...
+ |  
+ |  warn_nacl = False
+ |  
+ |  ----------------------------------------------------------------------
+ |  Methods inherited from VoiceProtocol:
+ |  
+ |  cleanup(self)
+ |      This method *must* be called to ensure proper clean-up during a disconne
+ct.
+ |      
+ |      It is advisable to call this from within :meth:`disconnect` when you are
+ |      completely done with the voice protocol instance.
+ |      
+ |      This method removes it from the internal state cache that keeps track of
+ |      currently alive voice clients. Failure to clean-up will cause subsequent
+ |      connections to report that it's still connected.
+ |  
+ |  ----------------------------------------------------------------------
+ |  Data descriptors inherited from VoiceProtocol:
+ |  
+ |  __dict__
+ |      dictionary for instance variables (if defined)
+ |  
+ |  __weakref__
+ |      list of weak references to the object (if defined)
