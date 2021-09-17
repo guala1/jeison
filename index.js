@@ -9,15 +9,10 @@ client.on('ready', () => {
 client.on('interactionCreate', async interaction => {
   if (!interaction.isCommand()) return;
 
-  if (interaction.commandName === 'sena') {
+  if (interaction.commandName == 'sena') {
     await interaction.reply('fat and gay');
   }
 });
 
-client.on('message', msg => {
-  if (msg.content === 'sena') {
-    msg.reply('fat and gay');
-  }
-});
 
 client.login(token);
