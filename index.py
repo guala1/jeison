@@ -27,7 +27,7 @@ async def on_message(message):
     if (message.author.voice) and message.content.startswith('-join'):
         channel = message.author.voice.channel
         voice = await channel.connect()
-        voice.play(discord.FFmpegPCMAudio(executable="C:\\Users\\nigga\\Documents\\GitJeison\\jeison\\ffmpeg\\ffmpeg.exe", source="teste.wav"))
+        voice.play(discord.FFmpegPCMAudio(executable="C:\\Users\\nigga\\Documents\\GitJeison\\jeison\\ffmpeg\\ffmpeg.exe", source="teste.mp3"))
 
 #Leave
     elif (message.author.voice) and message.content.startswith('-leave'):
