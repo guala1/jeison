@@ -14,4 +14,10 @@ client.on('interactionCreate', async interaction => {
   }
 });
 
+client.on('message', msg => {
+  if (msg.content === 'sena') {
+    msg.reply('fat and gay');
+  }
+});
+
 client.login(token);
