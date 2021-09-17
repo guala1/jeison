@@ -3,7 +3,7 @@ import os
 import requests
 
 client = discord.Client()
-TOKEN = AQUI QUE TA FALTANDO
+TOKEN = AQUI VEM A COISA CERTA
 
 @client.event
 async def on_ready():
@@ -11,7 +11,6 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    
     if message.author == client.user:
         return
 
@@ -22,14 +21,10 @@ async def on_message(message):
     if (message.author.voice) and message.content.startswith('sena'):
         channel = message.author.voice.channel
         await channel.connect()
-    else:
-        await channel.send("Tu não ta on no voice macaco")
-        
-    if (message.author.voice) and message.content.startswith('-leave'):
+    elif (message.author.voice) and message.content.startswith('-leave'):
         await message.voice_client.disconnect()
-    else:
-        await message.send("Tu não ta on no voice macaco")
-        
+    elif message.author.voice == None:
+        await channel.send("Tu não ta on no voice macaco")
 
 
 client.run(TOKEN)
