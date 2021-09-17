@@ -1,10 +1,9 @@
 import discord
 import os
 import requests
-from decouple import config
 
 client = discord.Client()
-TOKEN = config('TOKEN')
+TOKEN = AQUI QUE TA FALTANDO
 
 @client.event
 async def on_ready():
@@ -16,15 +15,15 @@ async def on_message(message):
     if message.author == client.user:
         return
 
+    channel = message.channel
     if ('sena') in message.content:
-        channel = message.channel
         await channel.send('Say hello!')
-           
+
     if (message.author.voice) and message.content.startswith('sena'):
         channel = message.author.voice.channel
         await channel.connect()
     else:
-        await message.send("Tu não ta on no voice macaco")
+        await channel.send("Tu não ta on no voice macaco")
         
     if (message.author.voice) and message.content.startswith('-leave'):
         await message.voice_client.disconnect()
