@@ -14,6 +14,29 @@ TOKEN = os.environ['TOKEN'] # config('TOKEN') -> se estiver no computador
 voice = None
 songsList = []
 
+def playSong():
+  global voice
+  global songList
+
+  if not voice.is_playing():
+    ydl_opts = {
+        'format':
+        'bestaudio/best',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+    }
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download([songsList.pop(0)])
+  
+    for file in os.listdir("./"):
+        if file.endswith("mp3"):
+            os.rename(file, "song.mp3")
+    voice.play(
+        discord.FFmpegPCMAudio(source="song.mp3"))
+
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
@@ -49,25 +72,10 @@ async def on_message(message):
       channel = message.author.voice.channel
       if voice == None:
         voice = await channel.connect()
+      playSong()
 
-      if not voice.is_playing():
-        ydl_opts = {
-            'format':
-            'bestaudio/best',
-            'postprocessors': [{
-                'key': 'FFmpegExtractAudio',
-                'preferredcodec': 'mp3',
-                'preferredquality': '192',
-            }],
-        }
-        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
-            ydl.download([songsList.pop(0)])
-      
-        for file in os.listdir("./"):
-            if file.endswith("mp3"):
-                os.rename(file, "song.mp3")
-        voice.play(
-            discord.FFmpegPCMAudio(source="song.mp3"))
+  elif message.content.startswith('-next'):
+    print('Proxima')
 #Leave
   elif (message.author.voice) and message.content.startswith('-leave'):
       voice = None
