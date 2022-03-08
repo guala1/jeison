@@ -2,6 +2,7 @@
 Projeto de um bot de música e outras ações para um servirdor privado no Discord.
 
 Comandos:
+
 -play + "link do video do youtube", Exemplo: -play https://www.youtube.com/watch?v=dQw4w9WgXcQ
 
 -stop
